@@ -8,18 +8,13 @@
     android:gravity="center"
     tools:context=".MainActivity">
 
-    <TextView
+    <ListView
+        android:id="@+id/lvToDoList"
         android:layout_width="match_parent"
-        android:gravity="center"
         android:layout_height="match_parent"
-        android:textSize="20sp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </ScrollView>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
