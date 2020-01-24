@@ -62,7 +62,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 7.1 Buat onItemLongClickListener di list view untuk hapus data
-        lvTodos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        lvTodos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //panggil method deleteItem()
+
+                showDialogOption(position);
+                //10.2 Panggil method deleteFromSP untuk menghapus data dari Shared Preferences
+                //deleteFromSP(position); // Sampai sini akan terjadi error karena key d SP tidak berurutan
+
+            }
+        });
+        /*lvTodos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 //panggil method deleteItem()
@@ -73,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
                 return false;
             }
-        });
+        });*/
 
         // 12.4 Buat OnItemClickListener dan panggil method showDialogEdit()
         lvTodos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Panggil method showDialogEdit()
-                showDialogEdit(position);
+                showDialogOption(position);
             }
         });
 
@@ -105,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         //EditText ini di deklarasikan di atas di dalam class
         edtTodo = view.findViewById(R.id.edtTodo);
+        edtTodo.setError("Tidak Boleh Kosong");
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Ingin menambah catatan?");
@@ -248,12 +260,33 @@ public class MainActivity extends AppCompatActivity {
     private void editItem(int position, String newItem){
         //set data di array dengan value baru berdasarkan index/position
         data.set(position, newItem);
-
         //jangan lupa Shared Preferences di generate ulang
         reGenerateAndSortSP();
 
         //refresh list view
         arrayAdapter.notifyDataSetChanged();
+
+    }
+    private void showDialogOption(int pos){
+        final int position = pos;
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("ingin mengganti catatan?");
+        dialog.setPositiveButton("Ubah", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                showDialogEdit(position);
+            }
+        });
+        dialog.setNeutralButton("Batal", null);
+        dialog.setNegativeButton("Hapus", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteItem(position);
+            }
+        });
+        dialog.create();
+        dialog.show();
     }
 
 }
