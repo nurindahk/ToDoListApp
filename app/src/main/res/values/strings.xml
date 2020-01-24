@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">To Do List App</string>
+    <string name="tv_splash"> Welcome! To Do List App</string>
 </resources>
