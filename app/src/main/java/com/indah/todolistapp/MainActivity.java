@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -116,26 +117,43 @@ public class MainActivity extends AppCompatActivity {
 
         //EditText ini di deklarasikan di atas di dalam class
         edtTodo = view.findViewById(R.id.edtTodo);
-        edtTodo.setError("Tidak Boleh Kosong");
 
+       /* if(edtTodo.length()==0){
+            Toast.makeText(getApplication(), "Tidak Boleh Kosong", Toast.LENGTH_LONG).show();
+            //edtTodo.setError("Tidak Boleh Kosong");
+        }
+*/
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Ingin menambah catatan?");
         dialog.setView(view);
         dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                final String edit = edtTodo.getText().toString().trim();
+                if(TextUtils.isEmpty(edit)){
+                    edtTodo.setError("Tidak Boleh Kosong");
+                    Toast.makeText(getApplication(), "eror, text tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    int newKey= data.size();
+
+                    String item = edtTodo.getText().toString();
+                    data.add(item); // tambah data ke object ArrayList data.
+                    arrayAdapter.notifyDataSetChanged(); // merefresh list view
+
+                    // 8.3 Tambahkan data ke Shared Preferences
+                    // Panggil method addToSP() untuk menyimpan data ke SP
+                    addToSP(newKey,item);
+
+                    Toast.makeText(getApplicationContext(),String.valueOf(newKey),Toast.LENGTH_LONG).show();
+
+               /* if(edtTodo.getText().length()==0){
+                    Toast.makeText(getApplication(), "Tidak Boleh Kosong", Toast.LENGTH_LONG).show();
+                    //edtTodo.setError("Tidak Boleh Kosong");
+                }*/
+                }
                 // 8.2 hitung size dari arraylist data untuk dijadikan calon key untuk SP :
-                int newKey= data.size();
 
-                String item = edtTodo.getText().toString();
-                data.add(item); // tambah data ke object ArrayList data.
-                arrayAdapter.notifyDataSetChanged(); // merefresh list view
-
-                // 8.3 Tambahkan data ke Shared Preferences
-                // Panggil method addToSP() untuk menyimpan data ke SP
-                addToSP(newKey,item);
-
-                Toast.makeText(getApplicationContext(),String.valueOf(newKey),Toast.LENGTH_LONG).show();
             }
         });
         dialog.setNegativeButton("Cancel",null);
